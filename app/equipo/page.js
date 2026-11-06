@@ -4,7 +4,7 @@ import Login from "@/components/Login";
 import { api, cop, fecha, hora, drawTicket } from "@/lib/client";
 
 const EST = { pendiente: "Sin pagar", en_revision: "Por revisar", aprobada: "Aprobada", rechazada: "Rechazada", vencida: "Vencida", anulada: "Anulada" };
-const VENDEDORES = ["Natalia", "Mayk", "Andrés", "Diego", "David", "Bloke", "GetBack"];
+const VENDEDORES = ["Natalia", "Mayk", "Andrés", "Diego", "David", "Insomónica", "Chatica Linda"];
 
 export default function Equipo() {
   const [auth, setAuth] = useState(null);
@@ -26,7 +26,7 @@ export default function Equipo() {
   return (
     <main className="wrap wide">
       <header className="row" style={{ justifyContent: "space-between" }}>
-        <div><p className="eyebrow">Panel del equipo · 24 oct</p><h1 className="brand" style={{ fontSize: 44 }}>Solé</h1></div>
+        <div><p className="eyebrow">Panel del equipo · 28 nov · Tunja</p><h1 className="brand" style={{ fontSize: 44 }}>Solé</h1></div>
         <div className="row"><a className="btn ghost sm" href="/puerta">Ir a puerta</a>
           <button className="btn ghost sm" onClick={async () => { await api("/api/admin/logout", {}); setAuth(false); }}>Salir</button></div>
       </header>
@@ -91,7 +91,7 @@ function Boletas({ items, cfg, reload }) {
 
   async function compartir(r) {
     const link = `${location.origin}/r/${r.id}?k=${r.token}`;
-    const text = `¡Hola ${r.nombre.split(" ")[0]}! Esta es tu boleta para Solé en GetBack, Duitama — sábado 24 de octubre. Tu QR: ${link}`;
+    const text = `¡Hola ${r.nombre.split(" ")[0]}! Esta es tu boleta para Solé + Insomónica en Chatica Linda, Tunja. Sábado 28 de noviembre, 8:00 p. m. Tu QR: ${link}`;
     const wa = r.telefono ? `https://wa.me/57${r.telefono}?text=${encodeURIComponent(text)}` : null;
     if (wa) window.open(wa, "_blank", "noopener"); else { try { await navigator.clipboard.writeText(text); setMsg("Mensaje copiado."); } catch { setMsg(link); } }
   }
@@ -196,7 +196,7 @@ function Vender({ cfg, occ, reload }) {
         <div className="card">
           <p>Boleta <span className="cd">{last.id}</span> para {last.nombre}</p>
           <div className="btns">
-            {last.telefono && <a className="btn sm" target="_blank" rel="noopener" href={`https://wa.me/57${last.telefono}?text=${encodeURIComponent(`¡Hola ${last.nombre.split(" ")[0]}! Esta es tu boleta para Solé en GetBack, Duitama — sábado 24 de octubre. Tu QR: ${link}`)}`}>Enviar QR por WhatsApp</a>}
+            {last.telefono && <a className="btn sm" target="_blank" rel="noopener" href={`https://wa.me/57${last.telefono}?text=${encodeURIComponent(`¡Hola ${last.nombre.split(" ")[0]}! Esta es tu boleta para Solé + Insomónica en Chatica Linda, Tunja. Sábado 28 de noviembre, 8:00 p. m. Tu QR: ${link}`)}`}>Enviar QR por WhatsApp</a>}
             <button className="btn ghost sm" onClick={async () => { try { await navigator.clipboard.writeText(link); setMsg({ t: "Enlace copiado.", k: "ok" }); } catch { setMsg({ t: link, k: "" }); } }}>Copiar enlace del QR</button>
           </div>
         </div>
@@ -238,7 +238,7 @@ function Resumen({ items, cfg, occ }) {
         const head = ["codigo", "nombre", "telefono", "etapa", "cantidad", "total", "estado", "canal", "pago", "vendedor", "creado", "ingreso"];
         const lines = items.map((r) => [r.id, r.nombre, r.telefono, r.etapa, r.cantidad, r.total, r.estado, r.canal, r.pago, r.vendedor, r.creado, r.usado_en].map((v) => `"${String(v ?? "").replace(/"/g, '""')}"`).join(","));
         const blob = new Blob(["﻿" + [head.join(","), ...lines].join("\n")], { type: "text/csv" });
-        const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "ventas-sole-getback.csv"; a.click();
+        const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "ventas-sole-tunja.csv"; a.click();
       }}>Descargar ventas (Excel/CSV)</button>
     </section>
   );

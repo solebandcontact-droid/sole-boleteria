@@ -48,10 +48,11 @@ export default function Comprar() {
   return (
     <main className="wrap">
       <header className="hero">
-        <p className="eyebrow">En vivo · Duitama · Boyacá</p>
+        <p className="eyebrow">Chatica Linda presenta</p>
         <h1 className="brand">Solé</h1>
-        <p className="date">Sábado 24 de octubre</p>
-        <p className="place">GetBack · Duitama &nbsp;·&nbsp; <span className="muted">Open act</span> Bloke <span className="muted">desde Chía</span></p>
+        <p className="place">Último concierto del año · <span style={{ color: "var(--orange)" }}>junto a Insomónica</span></p>
+        <p className="date">Sábado 28 de noviembre · 8:00 PM</p>
+        <p className="place">Chatica Linda · <span className="muted">Cra. 9 #19-92 · Tunja</span></p>
       </header>
 
       {ultima && (
@@ -93,7 +94,7 @@ export default function Comprar() {
 
           <h2>2. Tus datos</h2>
           <label className="f">Nombre completo
-            <input id="nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} autoComplete="name" placeholder="Como aparece en tu cédula" required />
+            <input id="nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} autoComplete="name" placeholder="Así sale en tu boleta" required />
           </label>
           <div className="grid2">
             <label className="f">Celular (WhatsApp)

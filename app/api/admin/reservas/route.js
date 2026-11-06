@@ -1,5 +1,5 @@
 import { sql, ensure } from "@/lib/db";
-import { getConfig, ocupadas } from "@/lib/config";
+import { getConfig, ocupadas, ETAPA_IDS } from "@/lib/config";
 import { isTeam } from "@/lib/auth";
 import { json, fail, estadoVisible } from "@/lib/util";
 
@@ -12,7 +12,7 @@ export async function GET() {
     await ensure();
     const rows = await sql()`SELECT id, token, etapa, cantidad, nombre, telefono, total, estado, pago, canal, vendedor,
         creado, expira, revisado_en, usado, usado_en, (comprobante IS NOT NULL) AS tiene_comprobante
-      FROM reservas ORDER BY creado DESC LIMIT 2000`;
+      FROM reservas WHERE etapa = ANY(${ETAPA_IDS}) ORDER BY creado DESC LIMIT 2000`;
     const cfg = await getConfig();
     const occ = await ocupadas();
     return json({

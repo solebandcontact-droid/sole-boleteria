@@ -1,5 +1,5 @@
 import { sql, ensure } from "@/lib/db";
-import { getConfig } from "@/lib/config";
+import { getConfig, ETAPA_IDS } from "@/lib/config";
 import { isTeam } from "@/lib/auth";
 import { json, fail, normCode } from "@/lib/util";
 
@@ -20,7 +20,7 @@ export async function POST(req) {
     };
 
     const ok = await sql()`UPDATE reservas SET usado = true, usado_en = now()
-      WHERE id = ${id} AND estado = 'aprobada' AND usado = false
+      WHERE id = ${id} AND etapa = ANY(${ETAPA_IDS}) AND estado = 'aprobada' AND usado = false
       RETURNING id, nombre, cantidad, etapa`;
     if (ok.length) {
       const r = ok[0];
@@ -28,6 +28,7 @@ export async function POST(req) {
     }
     const r = (await sql()`SELECT id, nombre, cantidad, etapa, estado, usado, usado_en FROM reservas WHERE id = ${id}`)[0];
     if (!r) return json({ resultado: "invalida", id, mensaje: "Este código no existe." });
+    if (!ETAPA_IDS.includes(r.etapa)) return json({ resultado: "invalida", id: r.id, nombre: r.nombre, cantidad: r.cantidad, mensaje: "Esta boleta es de otro concierto." });
     const base = { id: r.id, nombre: r.nombre, cantidad: r.cantidad, etapa: name(r.etapa) };
     if (r.estado === "aprobada" && r.usado) return json({ ...base, resultado: "usada", usadoEn: r.usado_en });
     const why = { pendiente: "El pago no se ha confirmado.", en_revision: "El pago está en revisión: apruébalo en el panel antes de dejarlo pasar.", rechazada: "El pago fue rechazado.", anulada: "Esta boleta fue anulada." };

@@ -11,6 +11,8 @@ export default function Reserva({ params, searchParams }) {
   const [msg, setMsg] = useState({ t: "", k: "" });
   const [busy, setBusy] = useState(false);
   const qrRef = useRef(null);
+  const [ticket, setTicket] = useState("");
+  const [ticketFile, setTicketFile] = useState(null);
 
   const load = useCallback(() => api(`/api/reservas/${id}?k=${encodeURIComponent(k)}`).then(setR).catch((e) => setErr(e.message)), [id, k]);
 
@@ -23,13 +25,16 @@ export default function Reserva({ params, searchParams }) {
   }, [r?.estado, load]);
   useEffect(() => {
     if (r?.estado === "aprobada" && qrRef.current) {
-      QRCode.toCanvas(qrRef.current, "SOLE24OCT|" + r.id, { width: 600, margin: 1, color: { dark: "#140b0b", light: "#f2e6d3" }, errorCorrectionLevel: "M" });
+      drawTicket(r).then((c) => {
+        setTicket(c.toDataURL("image/png"));
+        c.toBlob((b) => b && setTicketFile(new File([b], `Boleta-Sole-Tunja-${r.id}.png`, { type: "image/png" })));
+      }).catch(() => {});
     }
   }, [r]);
 
   const link = typeof window !== "undefined" ? window.location.href : "";
   const ref = `SOLE ${id}`;
-  const wa = r?.whatsapp ? `https://wa.me/57${r.whatsapp.replace(/^57/, "")}?text=${encodeURIComponent(`Hola, tengo una duda con mi reserva ${id} para Solé en GetBack.`)}` : null;
+  const wa = r?.whatsapp ? `https://wa.me/57${r.whatsapp.replace(/^57/, "")}?text=${encodeURIComponent(`Hola, tengo una duda con mi reserva ${id} para Solé en Chatica Linda, Tunja.`)}` : null;
 
   async function upload(ev) {
     const file = ev.target.files?.[0];
@@ -45,11 +50,22 @@ export default function Reserva({ params, searchParams }) {
     setBusy(false);
   }
 
+  async function compartir() {
+    try {
+      if (ticketFile && navigator.canShare && navigator.canShare({ files: [ticketFile] })) {
+        await navigator.share({ files: [ticketFile], text: "¡Voy al último concierto del año de @solebandofficial junto a Insomónica! Sábado 28 de noviembre en Chatica Linda, Tunja." });
+        return;
+      }
+    } catch (e) { if (e && e.name === "AbortError") return; }
+    setMsg({ t: "Tu celular no deja compartir directo. Guarda la imagen y súbela desde Instagram o WhatsApp.", k: "" });
+    guardar();
+  }
+
   async function guardar() {
     const c = await drawTicket(r);
     const a = document.createElement("a");
     a.href = c.toDataURL("image/png");
-    a.download = `Boleta-Sole-${r.id}.png`;
+    a.download = `Boleta-Sole-Tunja-${r.id}.png`;
     a.click();
   }
 
@@ -61,7 +77,7 @@ export default function Reserva({ params, searchParams }) {
 
   const head = (
     <header className="hero">
-      <p className="eyebrow">Sáb 24 oct · GetBack · Duitama</p>
+      <p className="eyebrow">Sáb 28 nov · Chatica Linda · Tunja</p>
       <h1 className="brand">Solé</h1>
       <p className="place">{r.etapa.nombre} · {r.etapa.tipo} &nbsp;×{r.cantidad} &nbsp;·&nbsp; {r.nombre}</p>
     </header>
@@ -127,12 +143,13 @@ export default function Reserva({ params, searchParams }) {
             <div className="big">{r.usado ? "Boleta usada" : "¡Pago confirmado!"}</div>
             <p>{r.usado ? `Ingresaste a las ${hora(r.usadoEn)}.` : `Muestra este QR en la entrada. Válido para ${r.cantidad > 1 ? r.cantidad + " personas" : "1 persona"}.`}</p>
           </div>
-          <div className="qr"><canvas ref={qrRef} aria-label={"Código QR de la boleta " + r.id} /></div>
-          <p className="code">{r.id}</p>
+          {ticket ? <img className="ticket" src={ticket} alt={"Boleta " + r.id + " de " + r.nombre} /> : <p className="muted" style={{ textAlign: "center" }}>Preparando tu boleta…</p>}
           <div className="btns">
-            <button className="btn" onClick={guardar}>Guardar boleta en el celular</button>
+            <button className="btn" onClick={compartir}>Compartir en redes</button>
+            <button className="btn ghost" onClick={guardar}>Guardar imagen</button>
           </div>
-          <p className="small muted" style={{ textAlign: "center" }}>Puedes guardar la imagen o volver a este enlace el día del show.</p>
+          <p className="small muted" style={{ textAlign: "center" }}>Súbela a tu historia y etiqueta a @solebandofficial. Si no se descarga, mantén presionada la imagen y elige Guardar. También puedes volver a este enlace el día del show.</p>
+          <p className={"msg " + msg.k} role="status">{msg.t}</p>
         </>
       )}
 

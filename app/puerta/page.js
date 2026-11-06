@@ -86,7 +86,7 @@ export default function Puerta() {
   return (
     <main className="wrap">
       <header className="row" style={{ justifyContent: "space-between" }}>
-        <div><p className="eyebrow">Puerta · GetBack</p><h1 className="brand" style={{ fontSize: 44 }}>Solé</h1></div>
+        <div><p className="eyebrow">Puerta · Chatica Linda</p><h1 className="brand" style={{ fontSize: 44 }}>Solé</h1></div>
         {cuenta && <div className="stat" style={{ textAlign: "right" }}><div className="k">Adentro</div><div className="v">{cuenta.dentro}<span className="small muted"> / {cuenta.total}</span></div></div>}
       </header>
 
