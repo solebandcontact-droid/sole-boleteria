@@ -4,7 +4,7 @@ import Login from "@/components/Login";
 import { api, cop, fecha, hora, drawTicket } from "@/lib/client";
 
 const EST = { pendiente: "Sin pagar", en_revision: "Por revisar", aprobada: "Aprobada", rechazada: "Rechazada", vencida: "Vencida", anulada: "Anulada" };
-const VENDEDORES = ["Natalia", "Mayk", "Andrés", "Diego", "David", "Insomónica", "Chatica Linda"];
+const VENDEDORES = ["Natalia", "Mayk", "Andrés", "Diego", "David", "Insomnica", "Chatica Linda"];
 
 export default function Equipo() {
   const [auth, setAuth] = useState(null);
@@ -91,7 +91,7 @@ function Boletas({ items, cfg, reload }) {
 
   async function compartir(r) {
     const link = `${location.origin}/r/${r.id}?k=${r.token}`;
-    const text = `¡Hola ${r.nombre.split(" ")[0]}! Esta es tu boleta para Solé + Insomónica en Chatica Linda, Tunja. Sábado 28 de noviembre, 8:00 p. m. Tu QR: ${link}`;
+    const text = `¡Hola ${r.nombre.split(" ")[0]}! Esta es tu boleta para Solé + Insomnica en Chatica Linda, Tunja. Sábado 28 de noviembre, 8:00 p. m. Tu QR: ${link}`;
     const wa = r.telefono ? `https://wa.me/57${r.telefono}?text=${encodeURIComponent(text)}` : null;
     if (wa) window.open(wa, "_blank", "noopener"); else { try { await navigator.clipboard.writeText(text); setMsg("Mensaje copiado."); } catch { setMsg(link); } }
   }
@@ -199,7 +199,7 @@ function Vender({ cfg, occ, reload }) {
         <div className="card">
           <p>Boleta <span className="cd">{last.id}</span> para {last.nombre}</p>
           <div className="btns">
-            {last.telefono && <a className="btn sm" target="_blank" rel="noopener" href={`https://wa.me/57${last.telefono}?text=${encodeURIComponent(`¡Hola ${last.nombre.split(" ")[0]}! Esta es tu boleta para Solé + Insomónica en Chatica Linda, Tunja. Sábado 28 de noviembre, 8:00 p. m. Tu QR: ${link}`)}`}>Enviar QR por WhatsApp</a>}
+            {last.telefono && <a className="btn sm" target="_blank" rel="noopener" href={`https://wa.me/57${last.telefono}?text=${encodeURIComponent(`¡Hola ${last.nombre.split(" ")[0]}! Esta es tu boleta para Solé + Insomnica en Chatica Linda, Tunja. Sábado 28 de noviembre, 8:00 p. m. Tu QR: ${link}`)}`}>Enviar QR por WhatsApp</a>}
             <button className="btn ghost sm" onClick={async () => { try { await navigator.clipboard.writeText(link); setMsg({ t: "Enlace copiado.", k: "ok" }); } catch { setMsg({ t: link, k: "" }); } }}>Copiar enlace del QR</button>
           </div>
         </div>

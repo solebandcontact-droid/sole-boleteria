@@ -50,7 +50,7 @@ export default function Comprar() {
       <header className="hero">
         <p className="eyebrow">Chatica Linda presenta</p>
         <h1 className="brand">Solé</h1>
-        <p className="place">Último concierto del año · <span style={{ color: "var(--orange)" }}>junto a Insomónica</span></p>
+        <p className="place">Último concierto del año · <span style={{ color: "var(--orange)" }}>junto a Insomnica</span></p>
         <p className="date">Sábado 28 de noviembre · 8:00 PM</p>
         <p className="place">Chatica Linda · <span className="muted">Cra. 9 #19-92 · Tunja</span></p>
       </header>

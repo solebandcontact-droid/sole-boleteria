@@ -7,8 +7,8 @@ const body = IBM_Plex_Sans({ subsets: ["latin"], weight: ["400", "500", "600"], 
 const mono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["500", "600"], variable: "--f-mono" });
 
 export const metadata = {
-  title: "Solé + Insomónica · Chatica Linda, Tunja · 28 de noviembre",
-  description: "Boletas para el último concierto del año de Solé, junto a Insomónica. Sábado 28 de noviembre, 8:00 p. m., Chatica Linda, Tunja. Preventa $20.000.",
+  title: "Solé + Insomnica · Chatica Linda, Tunja · 28 de noviembre",
+  description: "Boletas para el último concierto del año de Solé, junto a Insomnica. Sábado 28 de noviembre, 8:00 p. m., Chatica Linda, Tunja. Preventa $20.000.",
 };
 
 export const viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: "#0f1218" };

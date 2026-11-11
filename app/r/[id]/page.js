@@ -53,7 +53,7 @@ export default function Reserva({ params, searchParams }) {
   async function compartir() {
     try {
       if (ticketFile && navigator.canShare && navigator.canShare({ files: [ticketFile] })) {
-        await navigator.share({ files: [ticketFile], text: "¡Voy al último concierto del año de @solebandofficial junto a Insomónica! Sábado 28 de noviembre en Chatica Linda, Tunja." });
+        await navigator.share({ files: [ticketFile], text: "¡Voy al último concierto del año de @solebandofficial junto a Insomnica! Sábado 28 de noviembre en Chatica Linda, Tunja." });
         return;
       }
     } catch (e) { if (e && e.name === "AbortError") return; }
