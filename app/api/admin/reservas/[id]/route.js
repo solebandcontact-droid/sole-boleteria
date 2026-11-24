@@ -20,6 +20,9 @@ export async function POST(req, { params }) {
         WHERE id = ${id} AND estado IN ('en_revision', 'pendiente') RETURNING id`;
     } else if (accion === "anular") {
       rows = await sql()`UPDATE reservas SET estado = 'anulada', revisado_en = now() WHERE id = ${id} RETURNING id`;
+    } else if (accion === "restaurar") {
+      // Deshace una anulación: la boleta vuelve a estar aprobada y su QR sirve otra vez.
+      rows = await sql()`UPDATE reservas SET estado = 'aprobada', revisado_en = now() WHERE id = ${id} AND estado = 'anulada' RETURNING id`;
     } else if (accion === "borrar") {
       // Solo se pueden borrar boletas ya anuladas (por ejemplo, compras de prueba).
       rows = await sql()`DELETE FROM reservas WHERE id = ${id} AND estado = 'anulada' RETURNING id`;

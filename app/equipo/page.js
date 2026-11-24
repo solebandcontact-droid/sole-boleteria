@@ -130,6 +130,7 @@ function Boletas({ items, cfg, reload }) {
                   {r.estado !== "anulada" && (conf === r.id
                     ? <button className="btn danger sm" onClick={() => { setConf(""); accion(r.id, "anular", reload, setMsg); }}>Confirmar anulación</button>
                     : <button className="btn danger sm" onClick={() => setConf(r.id)}>Anular</button>)}
+                  {r.estado === "anulada" && <button className="btn ok sm" onClick={() => { setConf(""); accion(r.id, "restaurar", reload, setMsg); }}>Restaurar boleta</button>}
                   {r.estado === "anulada" && (conf === r.id
                     ? <button className="btn danger sm" onClick={() => { setConf(""); accion(r.id, "borrar", reload, setMsg); }}>Confirmar: borrar para siempre</button>
                     : <button className="btn danger sm" onClick={() => setConf(r.id)}>Borrar</button>)}
