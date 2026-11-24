@@ -13,6 +13,7 @@ export default function Reserva({ params, searchParams }) {
   const qrRef = useRef(null);
   const [ticket, setTicket] = useState("");
   const [ticketFile, setTicketFile] = useState(null);
+  const [qrPlain, setQrPlain] = useState("");
 
   const load = useCallback(() => api(`/api/reservas/${id}?k=${encodeURIComponent(k)}`).then(setR).catch((e) => setErr(e.message)), [id, k]);
 
@@ -25,6 +26,8 @@ export default function Reserva({ params, searchParams }) {
   }, [r?.estado, load]);
   useEffect(() => {
     if (r?.estado === "aprobada" && qrRef.current) {
+      // QR simple de respaldo, por si el navegador (p. ej. el de Instagram) no logra dibujar la boleta completa.
+      QRCode.toDataURL("SOLE28NOV|" + r.id, { width: 600, margin: 2, color: { dark: "#0f1218", light: "#ede8e1" }, errorCorrectionLevel: "M" }).then(setQrPlain).catch(() => {});
       drawTicket(r).then((c) => {
         setTicket(c.toDataURL("image/png"));
         c.toBlob((b) => b && setTicketFile(new File([b], `Boleta-Sole-Tunja-${r.id}.png`, { type: "image/png" })));
@@ -143,7 +146,7 @@ export default function Reserva({ params, searchParams }) {
             <div className="big">{r.usado ? "Boleta usada" : "¡Pago confirmado!"}</div>
             <p>{r.usado ? `Ingresaste a las ${hora(r.usadoEn)}.` : `Muestra este QR en la entrada. Válido para ${r.cantidad > 1 ? r.cantidad + " personas" : "1 persona"}.`}</p>
           </div>
-          {ticket ? <img className="ticket" src={ticket} alt={"Boleta " + r.id + " de " + r.nombre} /> : <p className="muted" style={{ textAlign: "center" }}>Preparando tu boleta…</p>}
+          {ticket ? <img className="ticket" src={ticket} alt={"Boleta " + r.id + " de " + r.nombre} /> : qrPlain ? <><div className="qr"><img src={qrPlain} alt={"Código QR de la boleta " + r.id} /></div><p className="code">{r.id}</p></> : <p className="muted" style={{ textAlign: "center" }}>Preparando tu boleta…</p>}
           <div className="btns">
             <button className="btn" onClick={compartir}>Compartir en redes</button>
             <button className="btn ghost" onClick={guardar}>Guardar imagen</button>
